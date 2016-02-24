@@ -1,0 +1,5 @@
+!.gitignore
+composer.lock
+.idea
+vendor
+tests/_output/*
