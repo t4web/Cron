@@ -22,7 +22,7 @@ class RunnerController extends AbstractActionController
 
     public function onDispatch(MvcEvent $e)
     {
-        if (!$this->getRequest() instanceof ConsoleRequest) {
+        if (!$e->getRequest() instanceof ConsoleRequest) {
             throw new RuntimeException('Only requests form console are allowed.');
         }
 
