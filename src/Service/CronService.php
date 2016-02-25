@@ -37,8 +37,6 @@ class CronService
         $this->startTime = time();
 
         $this->addJobs();
-
-        /** @var \Cron\Report\CronReport $repo */
         $this->cron->run();
         $this->wait();
         $this->throwErrorIfTimeout();
@@ -91,7 +89,7 @@ class CronService
     protected function throwErrorIfTimeout()
     {
         if ($this->checkTimeout()) {
-            throw new TimeoutException('Timeout Exception'/*$this->assembleErrorString()*/);
+            throw new TimeoutException($this->assembleErrorString());
         }
     }
 

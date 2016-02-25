@@ -5,6 +5,7 @@ namespace T4web\Cron\Executor;
 use Zend\EventManager\EventManager;
 use Cron\Executor\Executor as BaseExecutor;
 use T4web\Cron\JobEndedEvent;
+use T4web\Cron\Job\ShellJob;
 
 class Executor extends BaseExecutor
 {
@@ -55,5 +56,20 @@ class Executor extends BaseExecutor
         }
 
         return $isRunning;
+    }
+
+    /**
+     * @return ShellJob[]
+     */
+    public function getRunningJobs()
+    {
+        $jobs = [];
+        foreach ($this->sets as $set) {
+            if ($set->getJob()->isRunning()) {
+                $jobs[] = $set->getJob();
+            }
+        }
+
+        return $jobs;
     }
 }
