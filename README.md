@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/t4web/Cron.svg?branch=master)](https://travis-ci.org/t4web/Cron)
+[![codecov.io](http://codecov.io/github/t4web/Cron/coverage.svg?branch=master)](http://codecov.io/github/t4web/Cron?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/t4web/Cron/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/t4web/Cron/?branch=master)
+
 # Cron
 ZF2 Module. A PHP cron task manager for ZF2 Application. Implementation for [Cron/Cron](https://github.com/Cron/Cron)
 
