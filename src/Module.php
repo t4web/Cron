@@ -4,12 +4,13 @@ namespace T4web\Cron;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ModuleManager\Feature\ControllerProviderInterface;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\Console\Adapter\AdapterInterface;
 
 class Module implements
     AutoloaderProviderInterface,
     ConfigProviderInterface,
-    ControllerProviderInterface
+    ConsoleUsageProviderInterface
 {
     public function getConfig($env = null)
     {
@@ -27,12 +28,10 @@ class Module implements
         ];
     }
 
-    public function getControllerConfig()
+    public function getConsoleUsage(AdapterInterface $console)
     {
         return [
-            'factories' => [
-
-            ]
+            'cron run' => 'Run cron processes.',
         ];
     }
 }
