@@ -8,6 +8,7 @@ return [
     'controllers' => require_once 'controllers.config.php',
     'router' => require_once 'router.config.php',
     'console' => require_once 'console.config.php',
+    'events' => require_once 'events.config.php',
 
     'view_manager' => [
         'template_path_stack' => [

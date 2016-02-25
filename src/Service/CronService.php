@@ -3,10 +3,11 @@
 namespace T4web\Cron\Service;
 
 use Cron\Cron;
-use Cron\Job\ShellJob;
 use Cron\Schedule\CrontabSchedule;
+use T4web\Cron\Job\ShellJob;
 use T4web\Cron\Config;
 use T4web\Cron\Exception\TimeoutException;
+use T4web\Cron\Exception\RuntimeException;
 
 class CronService
 {
@@ -47,9 +48,15 @@ class CronService
     protected function addJobs()
     {
         foreach ($this->config->getJobs() as $jobArray) {
-            $job = new ShellJob();
-            $job->setCommand($this->assembleShellJobString($jobArray['command']));
-            $job->setSchedule(new CrontabSchedule($jobArray['schedule']));
+            if (!isset($jobArray['id'])) {
+                throw new RuntimeException(sprintf("Job %s must contain ID", $jobArray['command']));
+            }
+
+            $job = new ShellJob(
+                $jobArray['id'],
+                $this->assembleShellJobString($jobArray['command']),
+                new CrontabSchedule($jobArray['schedule'])
+            );
 
             $this->cron->getResolver()->addJob($job);
         }

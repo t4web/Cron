@@ -6,7 +6,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Cron\Cron;
 use Cron\Resolver\ArrayResolver;
-use Cron\Executor\Executor;
+use T4web\Cron\Executor\Executor;
 use T4web\Cron\Config;
 
 class CronServiceFactory implements FactoryInterface
