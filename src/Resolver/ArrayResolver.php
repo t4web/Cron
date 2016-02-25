@@ -92,7 +92,7 @@ class ArrayResolver implements ResolverInterface
      */
     public function resolve()
     {
-        $jobs = array();
+        $jobs = [];
         $now = new \DateTime();
 
         foreach ($this->jobs as $job) {

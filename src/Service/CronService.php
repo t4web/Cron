@@ -3,11 +3,7 @@
 namespace T4web\Cron\Service;
 
 use Cron\Cron;
-use Cron\Schedule\CrontabSchedule;
-use T4web\Cron\Job\ShellJob;
-use T4web\Cron\Config;
 use T4web\Cron\Exception\TimeoutException;
-use T4web\Cron\Exception\RuntimeException;
 
 class CronService
 {

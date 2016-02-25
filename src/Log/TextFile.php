@@ -2,11 +2,42 @@
 
 namespace T4web\Cron\Log;
 
+use T4web\Cron\Exception\RuntimeException;
+
 class TextFile implements LoggerInterface
 {
+    /**
+     * @var string
+     */
+    private $logDirectory;
+
+    /**
+     * @param string $logDirectory
+     */
+    public function __construct($logDirectory = null)
+    {
+        if (empty($logDirectory)) {
+            $logDirectory = getcwd() . '/data';
+        }
+
+        $this->logDirectory = rtrim($logDirectory, '/');
+
+        if (!is_writable($this->logDirectory)) {
+            throw new RuntimeException("Directory $logDirectory must be writable");
+        }
+    }
+
+    /**
+     * @param string $jobId
+     * @param int $startTime
+     * @param int $endTime
+     * @param bool $isSuccessful
+     * @param array $output
+     * @param array $error
+     */
     public function log($jobId, $startTime, $endTime, $isSuccessful, $output, $error)
     {
-        $filename = sprintf("data/%s.log", $jobId);
+        $filename = sprintf("%s/%s.log", $this->logDirectory, $jobId);
 
         $message = '';
         if ($isSuccessful) {
@@ -25,6 +56,11 @@ class TextFile implements LoggerInterface
         file_put_contents($filename, $message, FILE_APPEND);
     }
 
+    /**
+     * @param int $startTime
+     * @param int $endTime
+     * @return string
+     */
     private function getExecutionTime($startTime, $endTime)
     {
         $executionTime = $endTime - $startTime;
@@ -53,6 +89,10 @@ class TextFile implements LoggerInterface
         return $executionTimeText;
     }
 
+    /**
+     * @param $output
+     * @return string|void
+     */
     private function prepareOutput($output)
     {
         if (empty($output)) {
@@ -62,6 +102,10 @@ class TextFile implements LoggerInterface
         return '--Output: ' . PHP_EOL . implode('', $output) . PHP_EOL . '--End output.' . PHP_EOL;
     }
 
+    /**
+     * @param $error
+     * @return string|void
+     */
     private function prepareError($error)
     {
         if (empty($error)) {

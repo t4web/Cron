@@ -7,8 +7,7 @@ return [
         Service\CronService::class => Service\CronServiceFactory::class,
 
         Listener\SaveReport::class => Listener\SaveReportFactory::class,
-    ],
-    'invokables' => [
-        Log\LoggerInterface::class => Log\TextFile::class,
+
+        Log\LoggerInterface::class => Log\TextFileFactory::class,
     ],
 ];
