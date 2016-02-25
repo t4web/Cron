@@ -12,9 +12,9 @@ use T4web\Cron\Exception\RuntimeException;
 class CronService
 {
     /**
-     * @var Config
+     * @var integer
      */
-    protected $config = null;
+    protected $timeout = null;
 
     /**
      * @var Cron
@@ -26,9 +26,9 @@ class CronService
      */
     protected $startTime = null;
 
-    public function __construct(Config $config, Cron $cron)
+    public function __construct($timeout, Cron $cron)
     {
-        $this->config = $config;
+        $this->timeout = $timeout;
         $this->cron = $cron;
     }
 
@@ -36,32 +36,9 @@ class CronService
     {
         $this->startTime = time();
 
-        $this->addJobs();
         $this->cron->run();
         $this->wait();
         $this->throwErrorIfTimeout();
-    }
-
-    protected function addJobs()
-    {
-        foreach ($this->config->getJobs() as $jobArray) {
-            if (!isset($jobArray['id'])) {
-                throw new RuntimeException(sprintf("Job %s must contain ID", $jobArray['command']));
-            }
-
-            $job = new ShellJob(
-                $jobArray['id'],
-                $this->assembleShellJobString($jobArray['command']),
-                new CrontabSchedule($jobArray['schedule'])
-            );
-
-            $this->cron->getResolver()->addJob($job);
-        }
-    }
-
-    protected function assembleShellJobString($command)
-    {
-        return $this->config->getPhpPath() . ' ' . $this->config->getScriptPath() . $command;
     }
 
     protected function wait()
@@ -73,13 +50,11 @@ class CronService
 
     protected function checkTimeout()
     {
-        $timeout = $this->config->getTimeout();
-
-        if (is_null($timeout)) {
+        if (is_null($this->timeout)) {
             return false;
         }
 
-        if ($timeout > (time() - $this->startTime)) {
+        if ($this->timeout > (time() - $this->startTime)) {
             return false;
         }
 
@@ -102,6 +77,6 @@ class CronService
             $i++;
         }
 
-        return $string . ' have taken over ' . $this->config->getTimeout() . ' seconds to execute.';
+        return $string . ' have taken over ' . $this->timeout . ' seconds to execute.';
     }
 }

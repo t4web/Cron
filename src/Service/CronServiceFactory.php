@@ -5,7 +5,7 @@ namespace T4web\Cron\Service;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Cron\Cron;
-use Cron\Resolver\ArrayResolver;
+use T4web\Cron\Resolver\ArrayResolver;
 use T4web\Cron\Executor\Executor;
 use T4web\Cron\Config;
 
@@ -25,12 +25,17 @@ class CronServiceFactory implements FactoryInterface
             $config = $appConfig['cron'];
         }
 
+        $config = new Config($config);
+
+        $resolver = new ArrayResolver($config->getPhpPath(), $config->getScriptPath());
+        $resolver->buildFromConfig($config->getJobs());
+
         $cron = new Cron();
-        $cron->setResolver(new ArrayResolver());
+        $cron->setResolver($resolver);
         $cron->setExecutor(new Executor());
 
         return new CronService(
-            new Config($config),
+            $config->getTimeout(),
             $cron
         );
     }
