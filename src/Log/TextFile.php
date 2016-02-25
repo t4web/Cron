@@ -11,6 +11,8 @@ class TextFile implements LoggerInterface
         $message = '';
         if ($isSuccessful) {
             $message .= sprintf('[%s] Job processed successful', date('Y-m-d H:i:s')) . PHP_EOL;
+        } else {
+            $message .= sprintf('[%s] Job fail', date('Y-m-d H:i:s')) . PHP_EOL;
         }
 
         $message .= '  Start: ' . date('Y-m-d H:i:s', $startTime) . PHP_EOL;

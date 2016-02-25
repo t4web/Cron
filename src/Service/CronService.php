@@ -39,9 +39,8 @@ class CronService
         $this->addJobs();
 
         /** @var \Cron\Report\CronReport $repo */
-        $repo = $this->cron->run();
+        $this->cron->run();
         $this->wait();
-        //die(var_dump($repo->getReports()[0]->get));
         $this->throwErrorIfTimeout();
     }
 
