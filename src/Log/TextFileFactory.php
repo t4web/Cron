@@ -4,10 +4,6 @@ namespace T4web\Cron\Log;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
-use Cron\Cron;
-use T4web\Cron\Resolver\ArrayResolver;
-use T4web\Cron\Executor\Executor;
-use T4web\Cron\Config;
 
 class TextFileFactory implements FactoryInterface
 {
