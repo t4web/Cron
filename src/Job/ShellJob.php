@@ -4,6 +4,7 @@ namespace T4web\Cron\Job;
 
 use Cron\Job\ShellJob as BaseShellJob;
 use Cron\Schedule\ScheduleInterface;
+use Cron\Report\ReportInterface;
 
 class ShellJob extends BaseShellJob
 {
@@ -30,5 +31,17 @@ class ShellJob extends BaseShellJob
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return ReportInterface
+     */
+    public function getReport()
+    {
+        if (!$this->report) {
+            $this->report = $this->createReport();
+        }
+
+        return $this->report;
     }
 }

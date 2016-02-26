@@ -3,12 +3,20 @@
 namespace T4web\Cron\Executor;
 
 use Zend\EventManager\EventManager;
-use Cron\Executor\Executor as BaseExecutor;
+use Cron\Job\JobInterface;
+use Cron\Report\ReportInterface;
+use Cron\Report\CronReport;
+use Cron\Executor\ExecutorInterface;
 use T4web\Cron\JobEndedEvent;
 use T4web\Cron\Job\ShellJob;
 
-class Executor extends BaseExecutor
+class Executor implements ExecutorInterface
 {
+    /**
+     * @var JobInterface[]
+     */
+    private $jobs;
+
     /**
      * @var EventManager
      */
@@ -18,6 +26,33 @@ class Executor extends BaseExecutor
      * @var array
      */
     private $processedJobs = [];
+
+    /**
+     * @param JobInterface[] $jobs
+     *
+     * @return ReportInterface
+     */
+    public function execute(array $jobs)
+    {
+        $report = new CronReport();
+
+        $this->jobs = $jobs;
+        $this->startProcesses($report);
+
+        return $report;
+    }
+
+    /**
+     * @param CronReport $report
+     */
+    protected function startProcesses(CronReport $report)
+    {
+        foreach ($this->jobs as $job) {
+            $report->addJobReport($job->getReport());
+            // :) brilliantly
+            $job->run($job->getReport());
+        }
+    }
 
     private function getEventManager()
     {
@@ -36,8 +71,8 @@ class Executor extends BaseExecutor
     {
         $isRunning = false;
 
-        foreach ($this->sets as $id => $set) {
-            if ($set->getJob()->isRunning()) {
+        foreach ($this->jobs as $id => $job) {
+            if ($job->isRunning()) {
                 $isRunning = true;
             } else {
 
@@ -47,8 +82,8 @@ class Executor extends BaseExecutor
 
                 $event = new JobEndedEvent();
                 $event->setTarget($this);
-                $event->setJob($set->getJob());
-                $event->setReport($set->getReport());
+                $event->setJob($job);
+                $event->setReport($job->getReport());
                 $this->getEventManager()->trigger($event);
 
                 $this->processedJobs[$id] = true;
@@ -64,9 +99,9 @@ class Executor extends BaseExecutor
     public function getRunningJobs()
     {
         $jobs = [];
-        foreach ($this->sets as $set) {
-            if ($set->getJob()->isRunning()) {
-                $jobs[] = $set->getJob();
+        foreach ($this->jobs as $job) {
+            if ($job->isRunning()) {
+                $jobs[] = $job;
             }
         }
 

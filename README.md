@@ -3,7 +3,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/t4web/Cron/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/t4web/Cron/?branch=master)
 
 # Cron
-ZF2 Module. A PHP cron task manager for ZF2 Application. Implementation for [Cron/Cron](https://github.com/Cron/Cron)
+ZF2 Module. A PHP cron task manager for ZF2 Application. Inspired by [Cron/Cron](https://github.com/Cron/Cron)
 
 ## Installation
 
