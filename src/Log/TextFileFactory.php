@@ -21,6 +21,6 @@ class TextFileFactory implements FactoryInterface
             $logDirectory = $appConfig['cron']['log-directory'];
         }
 
-        return new TextFile($logDirectory);
+        return new TextFile(new FileSystem(), $logDirectory);
     }
 }

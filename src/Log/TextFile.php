@@ -12,17 +12,24 @@ class TextFile implements LoggerInterface
     private $logDirectory;
 
     /**
+     * @var FileSystem
+     */
+    private $fileSystem;
+
+    /**
      * @param string $logDirectory
      */
-    public function __construct($logDirectory = null)
+    public function __construct(FileSystem $fileSystem, $logDirectory = null)
     {
+        $this->fileSystem = $fileSystem;
+
         if (empty($logDirectory)) {
             $logDirectory = getcwd() . '/data';
         }
 
         $this->logDirectory = rtrim($logDirectory, '/');
 
-        if (!is_writable($this->logDirectory)) {
+        if (!$this->fileSystem->isWritable($this->logDirectory)) {
             throw new RuntimeException("Directory $logDirectory must be writable");
         }
     }
@@ -53,7 +60,7 @@ class TextFile implements LoggerInterface
         $message .= $this->prepareError($error);
         $message .= PHP_EOL;
 
-        file_put_contents($filename, $message, FILE_APPEND);
+        $this->fileSystem->put($filename, $message);
     }
 
     /**
