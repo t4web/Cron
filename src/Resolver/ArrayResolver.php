@@ -13,7 +13,7 @@ class ArrayResolver implements ResolverInterface
     /**
      * @var JobInterface[]
      */
-    protected $jobs;
+    protected $jobs = [];
 
     /**
      * @var string
@@ -42,7 +42,6 @@ class ArrayResolver implements ResolverInterface
      */
     public function buildFromConfig(array $rawJobs)
     {
-        $jobs = [];
         foreach ($rawJobs as $jobArray) {
 
             $this->validateJob($jobArray);
@@ -56,7 +55,7 @@ class ArrayResolver implements ResolverInterface
             $this->jobs[] = $job;
         }
 
-        return $jobs;
+        return $this->jobs;
     }
 
     /**
@@ -66,7 +65,7 @@ class ArrayResolver implements ResolverInterface
     private function validateJob(array $jobArray)
     {
         if (!isset($jobArray['id'])) {
-            throw new RuntimeException(sprintf("Job %s must contain ID", $jobArray['command']));
+            throw new RuntimeException(sprintf("Job must contain ID"));
         }
 
         if (!isset($jobArray['command'])) {
@@ -74,7 +73,7 @@ class ArrayResolver implements ResolverInterface
         }
 
         if (!isset($jobArray['schedule'])) {
-            throw new RuntimeException(sprintf("Job %s must contain schedule", $jobArray['command']));
+            throw new RuntimeException(sprintf("Job %s must contain schedule", $jobArray['id']));
         }
     }
 
