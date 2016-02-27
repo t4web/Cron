@@ -3,6 +3,8 @@
 namespace T4web\Cron;
 
 use Zend\Stdlib;
+use T4web\Cron\Exception\RuntimeException;
+use T4web\Cron\Log\FileSystem;
 
 class Config
 {
@@ -35,10 +37,29 @@ class Config
     protected $timeout = null;
 
     /**
-     * @param array $config
+     * @var string
      */
-    public function __construct(array $config = [])
+    protected $logDirectory;
+
+    /**
+     * @var FileSystem
+     */
+    protected $fileSystem;
+
+    /**
+     * Config constructor.
+     *
+     * @param array           $config
+     * @param FileSystem|null $filesystem
+     */
+    public function __construct(array $config = [], FileSystem $filesystem = null)
     {
+        if (!$filesystem) {
+            $filesystem = new FileSystem();
+        }
+
+        $this->fileSystem = $filesystem;
+
         if (isset($config['phpPath']) && !empty($config['phpPath'])) {
             $this->phpPath = $config['phpPath'];
         }
@@ -54,6 +75,36 @@ class Config
         if (isset($config['timeout']) && !empty($config['timeout'])) {
             $this->timeout = $config['timeout'];
         }
+
+        $logDirectory = null;
+        if (isset($config['log-directory']) && !empty($config['log-directory'])) {
+            $logDirectory = $config['log-directory'];
+        }
+
+        $this->logDirectory = $this->prepareLogDirectory($logDirectory);
+    }
+
+    private function prepareLogDirectory($logDirectory)
+    {
+        if (empty($logDirectory)) {
+            $logDirectory = getcwd() . '/data';
+        }
+
+        $logDirectory = rtrim($logDirectory, '/');
+
+        if (!$this->fileSystem->isWritable($logDirectory)) {
+            throw new RuntimeException("Directory $logDirectory must be writable");
+        }
+
+        return $logDirectory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogDirectory()
+    {
+        return $this->logDirectory;
     }
 
     /**

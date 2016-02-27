@@ -3,6 +3,7 @@
 namespace T4web\Cron\Log;
 
 use T4web\Cron\Exception\RuntimeException;
+use T4web\Cron\Config;
 
 class TextFile implements LoggerInterface
 {
@@ -17,21 +18,15 @@ class TextFile implements LoggerInterface
     private $fileSystem;
 
     /**
-     * @param string $logDirectory
+     * TextFile constructor.
+     *
+     * @param FileSystem $fileSystem
+     * @param Config     $config
      */
-    public function __construct(FileSystem $fileSystem, $logDirectory = null)
+    public function __construct(FileSystem $fileSystem, Config $config)
     {
         $this->fileSystem = $fileSystem;
-
-        if (empty($logDirectory)) {
-            $logDirectory = getcwd() . '/data';
-        }
-
-        $this->logDirectory = rtrim($logDirectory, '/');
-
-        if (!$this->fileSystem->isWritable($this->logDirectory)) {
-            throw new RuntimeException("Directory $logDirectory must be writable");
-        }
+        $this->logDirectory = $config->getLogDirectory();
     }
 
     /**

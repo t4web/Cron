@@ -19,13 +19,7 @@ class CronServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $appConfig = $serviceLocator->get('Config');
-        $config = [];
-        if (isset($appConfig['cron'])) {
-            $config = $appConfig['cron'];
-        }
-
-        $config = new Config($config);
+        $config = $serviceLocator->get(Config::class);
 
         $resolver = new ArrayResolver($config->getPhpPath(), $config->getScriptPath());
         $resolver->buildFromConfig($config->getJobs());

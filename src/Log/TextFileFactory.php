@@ -4,6 +4,7 @@ namespace T4web\Cron\Log;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
+use T4web\Cron\Config;
 
 class TextFileFactory implements FactoryInterface
 {
@@ -15,12 +16,9 @@ class TextFileFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $appConfig = $serviceLocator->get('Config');
-        $logDirectory = null;
-        if (isset($appConfig['cron']['log-directory'])) {
-            $logDirectory = $appConfig['cron']['log-directory'];
-        }
-
-        return new TextFile(new FileSystem(), $logDirectory);
+        return new TextFile(
+            new FileSystem(),
+            $serviceLocator->get(Config::class)
+        );
     }
 }

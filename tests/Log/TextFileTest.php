@@ -4,18 +4,19 @@ namespace T4web\CronTest\Log;
 
 use T4web\Cron\Log\TextFile;
 use T4web\Cron\Log\FileSystem;
+use T4web\Cron\Config;
 use Prophecy\Argument;
 
 class SaveReportTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
-        $logDirectory ='/some/dir';
         $filesystem = $this->prophesize(FileSystem::class);
+        $config = $this->prophesize(Config::class);
 
-        $filesystem->isWritable('/some/dir')->willReturn(true);
+        $config->getLogDirectory()->willReturn('/some/dir');
 
-        $service = new TextFile($filesystem->reveal(), $logDirectory);
+        $service = new TextFile($filesystem->reveal(), $config->reveal());
 
         $filesystem->put('/some/dir/job1.log', Argument::type('string'))->willReturn(null);
 
