@@ -20,6 +20,6 @@ class SaveReportTest extends \PHPUnit_Framework_TestCase
 
         $filesystem->put('/some/dir/job1.log', Argument::type('string'))->willReturn(null);
 
-        $service->log('job1', time(), time(), true, '', '');
+        $service->log('job1', time(), time() + (3600 * 28 + 11), true, '', '');
     }
 }
