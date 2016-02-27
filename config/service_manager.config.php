@@ -9,4 +9,7 @@ return [
         Log\LoggerInterface::class => Log\TextFileFactory::class,
         Config::class => ConfigFactory::class,
     ],
+    'invokables' => [
+        Log\FileSystem::class => Log\FileSystem::class,
+    ],
 ];
