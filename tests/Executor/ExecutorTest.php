@@ -77,4 +77,23 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($this->executor->isRunning());
     }
+
+    public function testGetRunningJobs()
+    {
+        $this->executor->execute([
+            $this->jobs['job1']->reveal(),
+            $this->jobs['job2']->reveal(),
+            $this->jobs['job3']->reveal(),
+        ]);
+
+        $this->jobs['job1']->isRunning()->willReturn(true);
+        $this->jobs['job2']->isRunning()->willReturn(false);
+        $this->jobs['job3']->isRunning()->willReturn(true);
+
+        $jobs = $this->executor->getRunningJobs();
+
+        $this->assertCount(2, $jobs);
+        $this->assertEquals($this->jobs['job1']->reveal(), $jobs[0]);
+        $this->assertEquals($this->jobs['job3']->reveal(), $jobs[1]);
+    }
 }
