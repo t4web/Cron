@@ -75,6 +75,8 @@ php index.php cron run
 
 ### Logs
 
+Logs works with [T4web\EventSubscriber](https://github.com/t4web/EventSubscriber) module (this module provide one place for manage all application events). Install and enable `T4web\EventSubscriber` in your application config. If module `T4web\EventSubscriber` does not exists - logs will not be written.
+
 After run in `log-directory` will be created log file by pattern `JOB-ID.log` (example: data/cron-job1.log) with content like this:
 ```
 [2016-02-25 15:43:48] Job fail
